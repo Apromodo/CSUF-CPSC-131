@@ -12,7 +12,9 @@ private:
     std::string color_;
 
 public:
-    Vehicle(std::string model, int year, std::string registrationNumber, std::string color);
+    Vehicle(std::string model, int year, 
+            std::string registrationNumber, 
+            std::string color);
     
     void displayVehicle();
 };
