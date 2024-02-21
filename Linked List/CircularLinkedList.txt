@@ -1,0 +1,170 @@
+#include<iostream>
+#include<memory>
+
+class Node {
+    private:
+        int data;
+        std::shared_ptr<Node> next;
+    public:
+        Node(int data, std::shared_ptr<Node> next) : data(data), next(next) {}
+
+        int getData() {
+            return data;
+        }
+        void setData(int data_) {
+            data = data_;
+        }   
+        std::shared_ptr<Node> getNext() {
+            return next;
+        }
+        void setNext(std::shared_ptr<Node> next_) {
+            next = next_;
+        }
+};
+
+
+class CircularLinkedList {
+    private:
+        std::shared_ptr<Node> head;
+        std::shared_ptr<Node> tail;
+        int size;
+    public:
+        CircularLinkedList() :size(0){
+            head = std::make_shared<Node>(0,nullptr);
+            tail = std::make_shared<Node>(0,head);
+        }
+        void pushBack(int Data){
+            std::shared_ptr<Node> newNode = std::make_shared<Node>(Data,head);
+            if(size == 0){
+                tail = newNode;
+                head->setNext(newNode);
+            }
+            else{
+                tail->setNext(newNode);
+                tail = newNode;
+            }
+            size++;
+        }
+        void pushFront(int Data){
+            std::shared_ptr<Node> newNode = std::make_shared<Node>(Data,nullptr);
+            if(size == 0){     
+                head->setNext(newNode);
+                tail = newNode;
+                newNode->setNext(head);
+            }
+            else{
+                newNode->setNext(head->getNext());
+                head->setNext(newNode);
+            }
+            size++;
+        }
+
+        std::shared_ptr<Node> GetNode(int index){
+            if(index < 0 || index >= size){
+                std::cout << "Index out of range" << std::endl;
+            }
+            else{}
+            std::shared_ptr<Node> current = head->getNext();
+            for(int i = 0; i < index; i++){
+                current = current->getNext();
+            }
+            std::cout << current->getData() << std::endl;
+            return current;
+        }
+
+        void insert(int index, int Data){
+            if(index == 0){
+                pushFront(Data);
+            }
+            else if(index == size){
+                pushBack(Data);
+            }
+            else{
+                std::shared_ptr<Node> newNode = std::make_shared<Node>(Data,nullptr);
+                std::shared_ptr<Node> current = GetNode(index-1);
+                newNode->setNext(current->getNext());
+                current->setNext(newNode);
+                size++;
+            }
+        }
+
+        void Traverse(){
+            std::shared_ptr<Node> current = head->getNext();
+            for(int i = 0; i < size; i++){
+                std::cout << current->getData() << " ";
+                current = current->getNext();
+            }
+            std::cout << std::endl;
+        }
+
+        void popFront(){
+            if(size == 0){
+                std::cout << "List is empty" << std::endl;
+                return;
+            }
+            std::shared_ptr<Node> current = head->getNext();
+            head->setNext(current->getNext());
+            size--;
+        
+        }
+
+        int getVal(int index){
+            if(index < 0 || index >= size){
+                std::cout << "Index out of range" << std::endl;
+                return -1;
+            }
+            std::shared_ptr<Node> current = GetNode(index);
+            return current->getData();
+        }
+
+        void setVal(int index, int Data){
+            if(index < 0 || index >= size){
+                std::cout << "Index out of range" << std::endl;
+                return;
+            }
+            std::shared_ptr<Node> current = GetNode(index);
+            current->setData(Data);
+        }
+
+
+
+        void popBack(){
+            if(size == 0){
+                std::cout << "List is empty" << std::endl;
+                return;
+            }
+            std::shared_ptr<Node> current = GetNode(size-1);
+            current->setNext(head);
+            tail = current;
+            size--;
+        }
+
+        ~CircularLinkedList(){
+            while(size > 0){
+                popFront();
+            }
+        }               
+
+
+};
+
+int main(){
+    CircularLinkedList list;
+    list.pushBack(1);
+    list.pushBack(2);
+    list.pushBack(3);
+    list.pushBack(4);
+    list.pushBack(5);
+    list.Traverse();
+    list.pushFront(0);
+    list.Traverse();
+    list.insert(3,10);
+    list.Traverse();
+    list.popFront();
+    list.Traverse();
+    list.popBack();
+    list.Traverse();
+    list.GetNode(0)->getData();
+    // std::cout<<list.GetNode(5)->getData();
+    return 0;
+}
