@@ -98,10 +98,10 @@ class MusicPlayer {
 
   void displayPlaylist() {
     if (!head) {
-    cout << "No songs on the playlist." << endl;
-    return;
+      cout << "No songs on the playlist." << endl;
+      return;
     }
-    
+
     cout << "Playlist:" << endl;
     auto temp = head;
     while (temp) {
@@ -109,6 +109,10 @@ class MusicPlayer {
            << temp->getSong()->getArtist() << endl;
       temp = temp->getNext();
     }
+  }
+
+  bool isEmpty() const {
+    return head == nullptr;
   }
 };
 
@@ -120,10 +124,11 @@ int main() {
   do {
     cout << "\nMusic Player Menu:" << endl;
     cout << "1. Add a Song" << endl;
-    cout << "2. Play Next" << endl;
-    cout << "3. Play Previous" << endl;
-    cout << "4. Display Playlist" << endl;
-    cout << "5. Exit" << endl;
+    cout << "2. Play Song" << endl;
+    cout << "3. Play Next" << endl;
+    cout << "4. Play Previous" << endl;
+    cout << "5. Display Playlist" << endl;
+    cout << "6. Exit" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
 
@@ -138,21 +143,27 @@ int main() {
         cout << "Song added successfully!" << endl;
         break;
       case '2':
-        mp.playNext();
+        if (mp.isEmpty())
+          cout << "No songs on the playlist. Cannot play." << endl;
+        else
+          mp.playSong();
         break;
       case '3':
-        mp.playPrev();
+        mp.playNext();
         break;
       case '4':
-        mp.displayPlaylist();
+        mp.playPrev();
         break;
       case '5':
+        mp.displayPlaylist();
+        break;
+      case '6':
         cout << "Exiting..." << endl;
         break;
       default:
         cout << "Invalid choice. Please enter a valid option." << endl;
     }
-  } while (choice != '5');
+  } while (choice != '6');
 
   return 0;
 }
